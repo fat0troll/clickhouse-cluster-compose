@@ -26,6 +26,9 @@ services:
       KEEPER_ID: 2
     volumes:
       - type: bind
+        source: ./config/keeper/keeper_config.xml
+        target: /etc/clickhouse-keeper/keeper_config.xml
+      - type: bind
         source: ./data/chk-02/
         target: /var/lib/clickhouse
       - type: bind
@@ -38,6 +41,9 @@ services:
     environment:
       KEEPER_ID: 3
     volumes:
+      - type: bind
+        source: ./config/keeper/keeper_config.xml
+        target: /etc/clickhouse-keeper/keeper_config.xml
       - type: bind
         source: ./data/chk-03/
         target: /var/lib/clickhouse
@@ -95,6 +101,12 @@ services:
       CH_SHARD: 01
     volumes:
       - type: bind
+        source: ./config/clickhouse/config.d/
+        target: /etc/clickhouse-server/config.d/
+      - type: bind
+        source: ./config/clickhouse/users.d/
+        target: /etc/clickhouse-server/users.d/
+      - type: bind
         source: ./data/ch-01-02/
         target: /var/lib/clickhouse
       - type: bind
@@ -111,6 +123,12 @@ services:
       CH_SHARD: 02
     volumes:
       - type: bind
+        source: ./config/clickhouse/config.d/
+        target: /etc/clickhouse-server/config.d/
+      - type: bind
+        source: ./config/clickhouse/users.d/
+        target: /etc/clickhouse-server/users.d/
+      - type: bind
         source: ./data/ch-02-01/
         target: /var/lib/clickhouse
       - type: bind
@@ -126,6 +144,12 @@ services:
     environment:
       CH_SHARD: 02
     volumes:
+      - type: bind
+        source: ./config/clickhouse/config.d/
+        target: /etc/clickhouse-server/config.d/
+      - type: bind
+        source: ./config/clickhouse/users.d/
+        target: /etc/clickhouse-server/users.d/
       - type: bind
         source: ./data/ch-02-02/
         target: /var/lib/clickhouse
