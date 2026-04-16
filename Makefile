@@ -1,4 +1,6 @@
 up:
+	@mkdir --mode 777 -p data/chk-01 data/chk-02 data/chk-03 data/ch-01-01 data/ch-01-02 data/ch-02-01 data/ch-02-02
+	@mkdir --mode 777 -p logs/chk-01 logs/chk-02 logs/chk-03 logs/ch-01-01 logs/ch-01-02 logs/ch-02-01 logs/ch-02-02
 	@docker compose up -d --remove-orphans
 
 up-with-grafana: up wait-for-clickhouse

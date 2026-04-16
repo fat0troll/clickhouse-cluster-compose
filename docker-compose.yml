@@ -1,15 +1,21 @@
 services:
   clickhouse-keeper-01: &keeper-base
     image: "clickhouse/clickhouse-keeper:${CHKVER:-latest-alpine}"
-      # user: "101:101"
     container_name: clickhouse-keeper-01
     hostname: clickhouse-keeper-01
+    restart: unless-stopped
     environment:
       KEEPER_ID: 1
     volumes:
       - type: bind
         source: ./config/keeper/keeper_config.xml
         target: /etc/clickhouse-keeper/keeper_config.xml
+      - type: bind
+        source: ./data/chk-01/
+        target: /var/lib/clickhouse
+      - type: bind
+        source: ./logs/chk-01/
+        target: /var/log/
     networks:
       - clickhouse-network
   clickhouse-keeper-02:
@@ -18,18 +24,32 @@ services:
     hostname: clickhouse-keeper-02
     environment:
       KEEPER_ID: 2
+    volumes:
+      - type: bind
+        source: ./data/chk-02/
+        target: /var/lib/clickhouse
+      - type: bind
+        source: ./logs/chk-02/
+        target: /var/log/
   clickhouse-keeper-03:
     <<: *keeper-base
     container_name: clickhouse-keeper-03
     hostname: clickhouse-keeper-03
     environment:
       KEEPER_ID: 3
+    volumes:
+      - type: bind
+        source: ./data/chk-03/
+        target: /var/lib/clickhouse
+      - type: bind
+        source: ./logs/chk-03/
+        target: /var/log/
 
   clickhouse-01-01: &clickhouse-base
     image: "clickhouse/clickhouse-server:${CHVER:-latest}"
-      # user: "101:101"
     container_name: clickhouse-01-01
     hostname: clickhouse-01-01
+    restart: unless-stopped
     environment:
       CH_SHARD: 01
     volumes:
@@ -39,6 +59,12 @@ services:
       - type: bind
         source: ./config/clickhouse/users.d/
         target: /etc/clickhouse-server/users.d/
+      - type: bind
+        source: ./data/ch-01-01/
+        target: /var/lib/clickhouse
+      - type: bind
+        source: ./logs/ch-01-01/
+        target: /var/log/
     networks:
       - clickhouse-network
     ports:
@@ -50,10 +76,10 @@ services:
       - clickhouse-keeper-03
     healthcheck:
       test: wget \
-          --no-verbose \
-          --tries=1 \
-          --spider \
-          localhost:8123/replicas_status || exit 1
+        --no-verbose \
+        --tries=1 \
+        --spider \
+        localhost:8123/replicas_status || exit 1
       interval: 40s
       timeout: 30s
       retries: 3
@@ -67,6 +93,13 @@ services:
       - "127.0.0.1:9001:9000"
     environment:
       CH_SHARD: 01
+    volumes:
+      - type: bind
+        source: ./data/ch-01-02/
+        target: /var/lib/clickhouse
+      - type: bind
+        source: ./logs/ch-01-02/
+        target: /var/log/
   clickhouse-02-01:
     <<: *clickhouse-base
     container_name: clickhouse-02-01
@@ -76,6 +109,13 @@ services:
       - "127.0.0.1:9002:9000"
     environment:
       CH_SHARD: 02
+    volumes:
+      - type: bind
+        source: ./data/ch-02-01/
+        target: /var/lib/clickhouse
+      - type: bind
+        source: ./logs/ch-02-01/
+        target: /var/log/
   clickhouse-02-02:
     <<: *clickhouse-base
     container_name: clickhouse-02-02
@@ -85,6 +125,13 @@ services:
       - "127.0.0.1:9003:9000"
     environment:
       CH_SHARD: 02
+    volumes:
+      - type: bind
+        source: ./data/ch-02-02/
+        target: /var/lib/clickhouse
+      - type: bind
+        source: ./logs/ch-02-02/
+        target: /var/log/
 
 networks:
   clickhouse-network:
