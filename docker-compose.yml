@@ -15,7 +15,7 @@ services:
         target: /var/lib/clickhouse
       - type: bind
         source: ./logs/chk-01/
-        target: /var/log/
+        target: /var/log/clickhouse-keeper
     networks:
       - clickhouse-network
   clickhouse-keeper-02:
@@ -30,7 +30,7 @@ services:
         target: /var/lib/clickhouse
       - type: bind
         source: ./logs/chk-02/
-        target: /var/log/
+        target: /var/log/clickhouse-keeper
   clickhouse-keeper-03:
     <<: *keeper-base
     container_name: clickhouse-keeper-03
@@ -43,7 +43,7 @@ services:
         target: /var/lib/clickhouse
       - type: bind
         source: ./logs/chk-03/
-        target: /var/log/
+        target: /var/log/clickhouse-keeper
 
   clickhouse-01-01: &clickhouse-base
     image: "clickhouse/clickhouse-server:${CHVER:-latest}"
@@ -64,7 +64,7 @@ services:
         target: /var/lib/clickhouse
       - type: bind
         source: ./logs/ch-01-01/
-        target: /var/log/
+        target: /var/log/clickhouse-server
     networks:
       - clickhouse-network
     ports:
@@ -99,7 +99,7 @@ services:
         target: /var/lib/clickhouse
       - type: bind
         source: ./logs/ch-01-02/
-        target: /var/log/
+        target: /var/log/clickhouse-server
   clickhouse-02-01:
     <<: *clickhouse-base
     container_name: clickhouse-02-01
@@ -115,7 +115,7 @@ services:
         target: /var/lib/clickhouse
       - type: bind
         source: ./logs/ch-02-01/
-        target: /var/log/
+        target: /var/log/clickhouse-server
   clickhouse-02-02:
     <<: *clickhouse-base
     container_name: clickhouse-02-02
@@ -131,7 +131,7 @@ services:
         target: /var/lib/clickhouse
       - type: bind
         source: ./logs/ch-02-02/
-        target: /var/log/
+        target: /var/log/clickhouse-server
 
 networks:
   clickhouse-network:
